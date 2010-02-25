@@ -1,0 +1,44 @@
+---
+DIRECTORY:
+    apps: &apps
+        meta: ONLY_DIRS
+        _tags:
+            category: &app-category
+              - games
+              - business
+              - utils 
+              - other
+            run-in: &app-runtype
+              - native
+              - browser                
+            environment: &app-env
+              - REVERT
+              - cli
+              - desktop
+              - ONLY_DIRS
+              - mobile
+              - other              
+            os: &app-os
+              mobile:
+                - android
+                - iphone
+                - other
+              desktop:  
+                  - all
+                  - mac-osx
+                  - unix
+                  - windows                  
+                  - other                  
+            use: &app-use
+              - fun
+              - professional
+              - other              
+            origin: &app-origin
+              - mine
+              - 
+                foreign:
+                  - forked                
+            maturity: &app-maturity  
+              - incubation
+              - young
+              - mature

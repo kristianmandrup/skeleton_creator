@@ -2,19 +2,103 @@
 
 Script to facilitate quick and easy creation of complex directory/file structures.
 
-1. Create a YAML directory structure file 
-  Structure should be similar to the examples in config-files
 
-  By default any leaf node results in a File being created. 
-  To override this, postfix with DIR, fx
+== YAML config file
+
+Create a YAML directory structure file 
+The structure should be similar to the examples in config-files, links.yml shows how to define symbolic links
+
+By default any leaf node results in a File being created. 
+
+root:
+  meta: ONLY_DIRS
+  a:
+    - bee
+    - cee
+
+Here a is created as a dir, with bee and cee as empty files 
+
+To override this, postfix entry with DIR, fx
   - my_dir DIR 
 
-  If you want all nodes in a tree to be created as dirs, supply a meta: in the root of the tree 
-  meta: ONLY_DIRS 
+Example: DIR
+  root:
+    a:
+      - bee DIR
+      - cee
 
-  This will ensure all nodes in the tree are treated as dirs
+Here a and bee are created as a dirs, while cee is an empty file 
+
+===  Special meta data
+
+If you want all nodes in a tree to be created as dirs, supply a meta: in the root of the tree 
+
+meta: ONLY_DIRS 
+
+This will ensure all the following nodes in the tree are treated as dirs, until a REVERT is encountered (see below)
+
+Example: ONLY_DIRS
+
+root:
+  meta: ONLY_DIRS
+  a:
+    - bee
+    - cee
+
+Here bee and cee are created as dirs
+
+Example: 
+Using ONLY_DIRS and REVERT
+
+root:
+  - ONLY_DIRS
+  - bee
+  - cee
+  - REVERT
+  - dee
+  - 
+    eee:
+      meta: ONLY_DIRS
+        x:
+         - y
+         - z
+
+Here bee and cee will be created as dirs while dee and eee become empty files. Later y and x also are dirs because of the meta: ONLY_DIRS
+
+Symbolic links:
+
+apps:
+  category: &app-category
+    - games ALIAS c-games
+    - business
+    - utils 
+    - other
+  all: &app-runtype
+    - my_games REF c-games 
+
+Here an alias c-games is created for the entry apps/category/games
+Later the symbolic link my-games is created to point at whatever the alias c-games currently points to, in this case apps/category/games
+An alias can be overridden later... this is illustrated below.
+
+apps:
+  category: &app-category
+    - games ALIAS c-games
+    - business
+    - my_games REF c-games 
+    - other
+    - cool-games ALIAS c-games
+  all: &app-runtype
+    - my_cool_games REF c-games 
+
+Results in this:
+
+my_games --> (c-games) --> games
+my_cool_games --> (c-games) --> cool-games
     
-1. Run it!
+== Usage
+
+Use the following ruby code as a 'template'. As shown, the options argument is optional
+ 
   require 'skeleton_creator'
 
   runner = FileSystem::Runner.new file_name [, options]

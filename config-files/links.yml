@@ -1,0 +1,13 @@
+---
+DIRECTORY:
+    apps: &apps
+        meta: ONLY_DIRS
+        _tags:
+            category: &app-category
+              - games ALIAS c-games
+              - business
+              - utils 
+              - other
+            all: &app-runtype
+              - my_games REF c-games 
+                              

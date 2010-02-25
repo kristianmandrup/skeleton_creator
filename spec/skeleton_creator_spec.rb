@@ -12,6 +12,17 @@ describe "SkeletonCreator" do
       FileUtils.rm_rf runner.root_dir
     end
   end
+
+  it "should create a directory structure with symbolic links" do
+    file_name = File.expand_path(File.join(Dir.pwd,  '../config-files/links.yml'))
+    runner = FileSystem::Runner.new file_name
+    root_dir = "~/testing"    
+    runner.run root_dir
+    FileUtils.cd File.join(runner.root_dir, '_tags/all') do
+      File.symlink?('my_games').should == true      
+    end
+    FileUtils.rm_rf runner.root_dir          
+  end
   
   it "should not create a directory structure if set to fake" do
     file_name = File.expand_path(File.join(Dir.pwd,  '../config-files/apps.yml'))
@@ -31,6 +42,6 @@ describe "SkeletonCreator" do
       File.directory?(dir).should == true
       FileUtils.rm_rf dir      
     end
-  end 
+  end  
 
 end
