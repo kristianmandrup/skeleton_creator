@@ -1,6 +1,45 @@
-= skeleton_creator
+= File structure creator
 
-Description goes here.
+Script to facilitate quick and easy creation of complex directory/file structures.
+
+1. Create a YAML directory structure file 
+  Structure should be similar to the examples in config-files
+
+  By default any leaf node results in a File being created. 
+  To override this, postfix with DIR, fx
+  - my_dir DIR 
+
+  If you want all nodes in a tree to be created as dirs, supply a meta: in the root of the tree 
+  meta: ONLY_DIRS 
+
+  This will ensure all nodes in the tree are treated as dirs
+    
+1. Run it!
+  require 'skeleton_creator'
+
+  runner = FileSystem::Runner.new file_name [, options]
+  runner.run root_dir [, options]
+
+Fx to generate the skeleton structure inside ~/testing as per the apps.yml file 
+  runner = FileSystem::Runner.new 'apps.yml'
+  runner.run "~/testing"
+
+OR using fake file and directory creators to simulate first 
+  runner = FileSystem::Runner.new 'apps.yml', :fake => true
+  runner.run "~/testing"
+  runner.run "~/testing2"
+
+OR
+  runner = FileSystem::Runner.new 'apps.yml'
+  runner.run "~/testing"
+  runner.run "~/testing2", :fake => true
+
+The options :fake is false by default. Setting it on the call to run overrides the initial value (set with Runner.new) for that particular run
+
+OR
+  runner.run ["testing2", "testing4"], :fake => true, :root => '~'
+
+Creates dirs in '~/testing2' and '~/testing4' 
 
 == Note on Patches/Pull Requests
  
